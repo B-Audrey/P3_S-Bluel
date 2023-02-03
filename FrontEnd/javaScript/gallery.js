@@ -1,4 +1,4 @@
-//link to works route frome API
+//link to the works route
 async function getWorks(){
     //call works route
     const response = await fetch('http://localhost:5678/api/works');
@@ -6,10 +6,11 @@ async function getWorks(){
     return response.json();  
 }
 
-// function, waiting the response from getWorks before starting
-async function displayWorks(){
-    const works = await getWorks();
-    console.log(works);
+
+ // function, waiting the response from getWorks before starting
+ async function displayWorks(){
+     const works = await getWorks();
+     console.log(works);
 
     // display every works in gallery
     for(let i=0; i< works.length; i++) {
@@ -23,7 +24,7 @@ async function displayWorks(){
         //fill with the appropriate img and text
         const imgPart = document.createElement('img');
         imgPart.src = works[i].imageUrl;
-        imgPart.crossOrigin = "anonymous";
+        imgPart.crossOrigin = "anonymous"
         imgPart.alt = works[i].title;
         //link with worksElement
         worksElement.appendChild(imgPart);
@@ -35,6 +36,6 @@ async function displayWorks(){
 
         inGallery.appendChild(worksElement);
     }
-}
+ }
 // call function to display
 displayWorks();
