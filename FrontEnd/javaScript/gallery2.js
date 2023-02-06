@@ -12,8 +12,6 @@ fetch('http://localhost:5678/api/works')
         displayWorks(works);
     })
 
-
-
 // display every works into gallery tag
 async function displayWorks (array) {
 
