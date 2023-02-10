@@ -189,6 +189,11 @@ li:hover {
 }
 #contact label, #formulaire label {
 	margin: 2em 0 1em 0;
+	color: #3D3D3D;
+}
+#formulaire a{
+	color: #3D3D3D;
+	text-align: center;
 }
 #contact textarea {
 	border: none;
@@ -210,5 +215,9 @@ footer nav ul {
 	display: flex;
 	justify-content: flex-end;
 	margin: 2em
+}
+footer{
+	background-color: #FFFFFF;
+	
 }
 
