@@ -1,4 +1,5 @@
 const sendingButton = document.querySelector("#form");
+
 sendingButton.addEventListener('submit', async function(event){
     let dataToSend = {email:'', password:''};
     console.log(dataToSend.email);
@@ -7,11 +8,10 @@ sendingButton.addEventListener('submit', async function(event){
         email: event.target.querySelector('#email').value,            
         password: event.target.querySelector('#password').value
     }
-    dataToSend = JSON.stringify(logInData);
-    console.log("infos en json >>>>>> " + dataToSend.email);
 
     if (dataToSend.email !== undefined && dataToSend.password !== undefined){
         console.log('je rentre dans le if');
+        dataToSend = JSON.stringify(logInData);
         let response = await fetch("http://localhost:5678/api/users/login", {
             method:"POST",
             headers : {"content-type": "application/json"},
@@ -21,10 +21,10 @@ sendingButton.addEventListener('submit', async function(event){
         await console.log(response);
         let token = '';
             if(response.message == 'user not found'){
-                alert('Utilisateur ou Mot de passe incorrect. Merci de vérifier les données saisies')
+                alert('Utilisateur ou Mot de passe incorrect. Vérifiez les données saisies.')
             } else if(response.token !== ''){
                 token = response.token;
-                document.location.href = 'http://localhost:5500/FrontEnd/index.html';
+                document.location.href = 'http://localhost:5500/FrontEnd/homePage_edit.html';
             } else {
                 alert('Données non valides')
             }

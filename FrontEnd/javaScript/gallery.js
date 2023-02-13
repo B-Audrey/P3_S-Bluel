@@ -1,3 +1,11 @@
+/////////VARIABLES//////////////////////////
+const jsonWorks = await getWorks();
+const works = useSet(jsonWorks);
+const jsonCategories = await getCategories();
+const categories = useSet(jsonCategories);
+categories.unshift({id: 0, name:'Tous'});
+
+const filtres = document.querySelector('.filtres');
 /////////////////////////FUNCTIONS LINKED WITH API////////////////////
 async function getWorks(){
     const response = await fetch('http://localhost:5678/api/works');
@@ -12,17 +20,16 @@ async function getCategories(){
 };
 
 //////////////////////////FUNCTIONS//////////////////////
-// function noDouble(works) {
-//     const worksWithoutDouble = new Set();
-//     for(work of works) {
-//         worksWithoutDouble.add(work);
-//     }
-//     return worksWithoutDouble;
-// }
+function useSet(works){
+    const noDouble = new Set(works);
+    let cleanWorks = Array.from(noDouble);
+    return cleanWorks
+}
 
 //display Works into gallery tag
 function display(works){
     document.querySelector('.gallery').innerHTML=('');
+
     for(let i=0; i< works.length; i++) {
 
         const gallery = document.querySelector('.gallery');
@@ -39,51 +46,43 @@ function display(works){
 
         gallery.appendChild(worksElement);
     };
-}
+};
 
 // convert text in appropriate case to css class
-function formatClassName(string){
+function formatedClassName(string){
     return string.toLowerCase().replaceAll(' ','_').replace('&','');
 }
 
-//create new button
-function createButtons(categories, works){
-    const filtres = document.querySelector('.filtres');
-    let tousButton = document.createElement ('button')
-    tousButton.class = 'tous';
-    tousButton.type = 'button';
-    tousButton.innerText = 'Tous';
-    filtres.appendChild(tousButton);
-    tousButton.addEventListener('click', function(){
-        display(works);
-    });
-
+//create and listen filter buttons
+function createActiveButtons(categories, works){
+    //create
     for (let i=0; i<categories.length; i++){
+        let current = categories[i];
         let button = document.createElement('button');
-        button.class = formatClassName(categories[i].name);
-        button.type = "button";
-        button.innerText = categories[i].name;
-        filtres.appendChild(button);
 
+        button.className = formatedClassName(current.name);
+        button.type = "button";
+        button.innerText = current.name;
+        filtres.appendChild(button);
+        
         button.addEventListener('click', function(){
-            const filterResult = works.filter(function(work) {
-                return work.categoryId === categories[i].id;
+            const filteredResult = works.filter(function(work) {
+                return work.categoryId === current.id;
             })
-            console.log(filterResult);
-            display(filterResult);
+            display(filteredResult);
         });
-    }
+    };
+    //listen
+    let tousButton = document.querySelector('.tous');
+        tousButton.addEventListener('click', function(){
+            display(works);
+        });
 }
 
 ///////////////////////////////////CALLS AND DISPLAYS////////////////////////
 
 async function dynamicDisplay(){
-    let works = await getWorks();
-    const categories = await getCategories();
-    // works = noDouble(works);
-    console.log(works);
     display(works);
-    createButtons(categories, works);
+    createActiveButtons(categories, works);
 }
-
 dynamicDisplay();
