@@ -21,7 +21,7 @@ sendingButton.addEventListener('submit', async function(event){
         await console.log(response);
         let token = '';
             if(response.message == 'user not found'){
-                alert('Utilisateur ou Mot de passe incorrect. Vérifiez les données saisies.')
+                alert("Erreur dans l'identifiant ou le mot de passe.");
             } else if(response.token !== ''){
                 token = response.token;
                 document.location.href = 'http://localhost:5500/FrontEnd/homePage_edit.html';
