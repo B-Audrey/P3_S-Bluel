@@ -36,3 +36,8 @@ export function useSet(works){
     let cleanWorks = Array.from(noDouble);
     return cleanWorks
 }
+
+export function formatedClassName(string){
+    return string.toLowerCase().replaceAll(' ','_').replace('&','');
+}
+

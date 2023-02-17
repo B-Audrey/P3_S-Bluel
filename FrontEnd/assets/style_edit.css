@@ -31,33 +31,102 @@ body{
 
 #modalBlock{
     position: fixed;
-    top: 0;
-    left: 0;
     width: 100%;
     height: 100%;
+    top: 0;
     background: rgba(0,0,0,0.3);
     display: flex;
     justify-content: center;
     align-items: center;
+    overflow: auto;
 }
 
+/*inside Modal*/
+
 .modal__container{
+    box-sizing: border-box;
     width: 630px;
     height: 731px;
     background: #FFFFFF;
     border-radius: 10px;
     display: flex;
     flex-direction: column;
+    align-items: center;
+    padding: 2%;
+}
+
+.modal__container button{
+    background-color: #FFFFFF;
+    border: none;
+    font-family: 'Syne';
+    font-size: 14px;
+    height: 36px;
+}
+
+#closeModalButton{
+    text-align: end;
+    width: 100%;
+    font-size: 1.5em;
 }
 
 h3{
     text-align: center;
-    margin-top: 60px;
 }
 
 .modal__gallery{
     display: grid;
     grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
     gap: 1%;
-    overflow: auto;
+    width: 420px;
+    height: 433px;
+    padding-bottom: 5%;
+    border-bottom: 1px solid #B3B3B3;
+    margin: 3%;
+    overflow-y: auto;
+}
+
+.editWork{
+    display: flex;
+    flex-direction: column;
+}
+
+.modal__gallery img{
+    width: 100%;
+}
+
+.modal__gallery .deleteButton{
+    position: relative;
+    top: 23px;
+    left : 55px;
+    padding: 0px;
+    box-sizing: border-box;
+    width: 17px;
+    height: 17px;
+}
+
+.modal__gallery .deleteButton img{
+    padding: 4px;
+    background: #000000;
+    border-radius: 2px;
+    width: 9px;
+    height: 9px;
+}
+
+
+
+
+
+
+
+.modal__container .addPicture{
+    background: #1D6154;
+    border-radius: 60px;
+    width: 237px;
+    color: #FFFFFF;
+}
+
+.modal__container .deleteGallery{
+    margin-top: 5% ;
+    width: 230px;
+    color: #D65353;
 }

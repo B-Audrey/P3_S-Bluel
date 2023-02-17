@@ -1,4 +1,4 @@
-import {getWorks, getCategories, display, useSet} from "./functions.js";
+import {getWorks, getCategories, display, useSet, formatedClassName} from "./functions.js";
 
 /////////VARIABLES//////////////////////////
 const jsonWorks = await getWorks();
@@ -9,12 +9,6 @@ categories.unshift({id: 0, name:'Tous'});
 
 const filtres = document.querySelector('.filtres');
 //////////////////////////FUNCTIONS/////////////////////
-
-// convert text in appropriate case to css class
-function formatedClassName(string){
-    return string.toLowerCase().replaceAll(' ','_').replace('&','');
-}
-
 //create and listen filter buttons
 function createActiveButtons(categories, works){
     //create
