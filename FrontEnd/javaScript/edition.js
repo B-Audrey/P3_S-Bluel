@@ -10,16 +10,29 @@ const categories = useSet(jsonCategories);
 const openModalButton = document.getElementById('openModalButton'); 
 const closeModalButton = document.getElementById('closeModalButton');
 const modalBlock = document.getElementById('modalBlock');
+
 display(works);
 
-openModalButton.addEventListener('click', () => { 
-    modalBlock.style.display = 'flex';
-    displayEditMode(works);
-});
+const modalDisplay = () => {
 
-closeModalButton.addEventListener('click', () => {
-    modalBlock.style.display = 'none';
-});
+    openModalButton.addEventListener('click', () => { 
+        modalBlock.style.display = 'flex';
+        displayEditMode(works);
+    });
+
+    closeModalButton.addEventListener('click', () => {
+        modalBlock.style.display = 'none';
+    });
+
+    document.documentElement.addEventListener('click', (event) => {
+        event.stopPropagation();
+        modalBlock.style.display = 'none';
+    });
+ 
+};
+modalDisplay();
+
+
 
 function displayEditMode(works){
 
@@ -49,11 +62,10 @@ function displayEditMode(works){
 
         modalGallery.appendChild(workElement);
     
-        deleteButton.addEventListener('click', function(event){
+        deleteButton.addEventListener('click', function(){
             const workToDeleteId = works[i].id;
             deleteWork(workToDeleteId);
             alert('Element supprimé avec succès')
-            event.preventDefault();
         });
 
     };

@@ -24,7 +24,7 @@ sendingButton.addEventListener('submit', async function(event){
             } else if(response.token !== ''){
                 token = response.token;
                 window.localStorage.setItem('token', `${token}`);
-                document.location.href = 'homePage_edit.html';
+                document.location.href = 'edition.html';
             } else {
                 alert('Données non valides')
             }
