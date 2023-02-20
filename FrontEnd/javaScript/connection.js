@@ -23,7 +23,7 @@ sendingButton.addEventListener('submit', async function(event){
                 alert("Erreur dans l'identifiant ou le mot de passe.");
             } else if(response.token !== ''){
                 token = response.token;
-                console.log(token);
+                window.localStorage.setItem('token', `${token}`);
                 document.location.href = 'homePage_edit.html';
             } else {
                 alert('Données non valides')
@@ -32,5 +32,5 @@ sendingButton.addEventListener('submit', async function(event){
     } else {
         alert('Merci de remplir les champs de saisie');
     };
-    window.localStorage.setItem('token', `${token}`);
+   
 });

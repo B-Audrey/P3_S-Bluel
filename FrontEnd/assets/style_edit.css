@@ -104,6 +104,10 @@ h3{
     height: 17px;
 }
 
+.deleteButton:hover{
+    cursor: pointer;
+}
+
 .modal__gallery .deleteButton img{
     padding: 4px;
     background: #000000;
@@ -111,12 +115,6 @@ h3{
     width: 9px;
     height: 9px;
 }
-
-
-
-
-
-
 
 .modal__container .addPicture{
     background: #1D6154;

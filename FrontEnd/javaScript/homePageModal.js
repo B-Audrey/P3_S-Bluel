@@ -1,16 +1,15 @@
 import { getWorks, getCategories, display, useSet } from "./functions.js";
 
 const token = window.localStorage.getItem('token');
-console.log(token);
 
 const jsonWorks = await getWorks();
 const works = await useSet(jsonWorks);
 const jsonCategories = await getCategories();
 const categories = useSet(jsonCategories);
 
-const openModalButton = document.getElementById('openModalButton'); // selectionne le bouton modal du DOM
+const openModalButton = document.getElementById('openModalButton'); 
 const closeModalButton = document.getElementById('closeModalButton');
-const modalBlock = document.getElementById('modalBlock'); // selectionne la div du bloc : #modal
+const modalBlock = document.getElementById('modalBlock');
 display(works);
 
 openModalButton.addEventListener('click', () => { 
@@ -50,9 +49,11 @@ function displayEditMode(works){
 
         modalGallery.appendChild(workElement);
     
-        deleteButton.addEventListener('click', function(){
+        deleteButton.addEventListener('click', function(event){
             const workToDeleteId = works[i].id;
             deleteWork(workToDeleteId);
+            alert('Element supprimé avec succès')
+            event.preventDefault();
         });
 
     };
@@ -61,8 +62,7 @@ function displayEditMode(works){
 async function deleteWork(workId){
     const response = await fetch(`http://localhost:5678/api/works/${workId}`,{
         method: "DELETE",
-        headers: {'Content-type':'application/json'},
-        autorization :  `Bearer ${token}`
-    })
+        headers: {'Content-type':'application/json', 'Authorization' : 'Bearer ' + token },
+        });
     return response.json();
 }
