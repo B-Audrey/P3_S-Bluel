@@ -1,36 +1,42 @@
 const sendingButton = document.querySelector("#form");
 
 let token = '';
+let dataToSend = {email:'', password:''};
 
-sendingButton.addEventListener('submit', async function(event){
-    let dataToSend = {email:'', password:''};
-    event.preventDefault();
+const getLogInData = (event) => {
     const logInData = {
         email: event.target.querySelector('#email').value,            
         password: event.target.querySelector('#password').value
     }
+    return logInData;
+};
 
-    if (dataToSend.email !== undefined && dataToSend.password !== undefined){
+const fetchData = async (logInData) => {
+    const dataToSend = JSON.stringify(logInData); 
+    let response = await fetch("http://localhost:5678/api/users/login", {
+        method:"POST",
+        headers : {"content-type": "application/json"},
+        body: dataToSend
+    });
+    return await response.json();
+}
 
-        dataToSend = JSON.stringify(logInData);
-        let response = await fetch("http://localhost:5678/api/users/login", {
-            method:"POST",
-            headers : {"content-type": "application/json"},
-            body: dataToSend
-        });
-        response = await response.json();
-            if(response.message == 'user not found'){
-                alert("Erreur dans l'identifiant ou le mot de passe.");
-            } else if(response.token !== ''){
-                token = response.token;
-                window.localStorage.setItem('token', `${token}`);
-                document.location.href = 'edition.html';
-            } else {
-                alert('Données non valides')
-            }
-
-    } else {
-        alert('Merci de remplir les champs de saisie');
+sendingButton.addEventListener('submit', async function(event){
+    event.preventDefault();
+    const logInData = getLogInData(event);
+    console.log(logInData);
+    if (!logInData.email && !logInData.password){
+        return alert ('Merci de remplir les champs de saisie;');
     };
-   
+
+    const response = await fetchData(logInData);
+    console.log( await response);
+    
+    if(response.message || response.error) {
+        return alert("Erreur dans l'identifiant ou le mot de passe.");
+    } else if(response.token && response.id){
+        token = response.token;
+        window.localStorage.setItem('token', `${token}`);
+        // document.location.href = 'edition.html';   
+    };
 });
