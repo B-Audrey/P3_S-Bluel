@@ -34,9 +34,9 @@ sendingButton.addEventListener('submit', async function(event){
     
     if(response.message || response.error) {
         return alert("Erreur dans l'identifiant ou le mot de passe.");
-    } else if(response.token && response.id){
+    } else if(response.token && response.userId){
         token = response.token;
         window.localStorage.setItem('token', `${token}`);
-        // document.location.href = 'edition.html';   
+        document.location.href = 'edition.html';   
     };
 });

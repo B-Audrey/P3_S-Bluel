@@ -9,29 +9,29 @@ const categories = useSet(jsonCategories);
 
 const openModalButton = document.getElementById('openModalButton'); 
 const closeModalButton = document.getElementById('closeModalButton');
-const modalBlock = document.getElementById('modalBlock');
-
+const modalBackground = document.getElementById('modalBackground');
+const modalContainer = document.getElementById('stopPropagation');
 display(works);
 
-const modalDisplay = () => {
+const displayModal = (string) => {
+    modalBackground.style.display = string;
+} 
+openModalButton.addEventListener('click', () => { 
+    displayModal('flex');
+    displayEditMode(works);
+});
 
-    openModalButton.addEventListener('click', () => { 
-        modalBlock.style.display = 'flex';
-        displayEditMode(works);
-    });
+closeModalButton.addEventListener('click', () => {
+    displayModal('none');
+});
 
-    closeModalButton.addEventListener('click', () => {
-        modalBlock.style.display = 'none';
-    });
-
-    document.documentElement.addEventListener('click', (event) => {
-        event.stopPropagation();
-        modalBlock.style.display = 'none';
-    });
+modalBackground.addEventListener('click', () => {
+    displayModal('none');
+});
+modalContainer.addEventListener('click', (event) => {
+    event.stopPropagation();
+});
  
-};
-modalDisplay();
-
 
 
 function displayEditMode(works){

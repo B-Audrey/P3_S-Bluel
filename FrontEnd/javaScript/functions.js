@@ -1,13 +1,13 @@
 export async function getWorks(){
     const response = await fetch('http://localhost:5678/api/works');
     //convert response to json
-    return response.json(); 
+    return await response.json(); 
 }
 
 export async function getCategories(){
     const response = await fetch('http://localhost:5678/api/categories');
     //convert response to json
-    return response.json();  
+    return await response.json();  
 };
 
 export function display(works){
