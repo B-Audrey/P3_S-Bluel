@@ -11,12 +11,14 @@ export async function getCategories(){
 };
 
 export function display(works){
+    console.log(works);
     document.querySelector('.gallery').innerHTML=('');
 
     for(let i=0; i< works.length; i++) {
 
         const gallery = document.querySelector('.gallery');
         const worksElement = document.createElement('figure');
+        worksElement.className = `item_${works[i].id}`;
         
         const imgPart = document.createElement('img');
         imgPart.src = works[i].imageUrl;

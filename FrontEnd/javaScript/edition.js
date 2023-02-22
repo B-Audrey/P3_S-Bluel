@@ -13,6 +13,8 @@ const modalBackground = document.getElementById('modalBackground');
 const modalContainer = document.getElementById('stopPropagation');
 display(works);
 
+
+//LISTENER DISPLAY MODAL
 const displayModal = (string) => {
     modalBackground.style.display = string;
 } 
@@ -20,30 +22,29 @@ openModalButton.addEventListener('click', () => {
     displayModal('flex');
     displayEditMode(works);
 });
-
 closeModalButton.addEventListener('click', () => {
     displayModal('none');
 });
-
 modalBackground.addEventListener('click', () => {
     displayModal('none');
 });
 modalContainer.addEventListener('click', (event) => {
     event.stopPropagation();
 });
- 
+// -----------
 
 
-function displayEditMode(works){
+function displayEditMode(worksToEdit){
 
     const modalGallery = document.querySelector('.modal__gallery');
     modalGallery.innerHTML = '';
 
-    for(let i=0; i< works.length; i++) {
+    for(let i=0; i< worksToEdit.length; i++) {
 
         const workElement = document.createElement('div');
-        workElement.className = ('editWork')
-
+        workElement.className = ('editWork ')
+        workElement.className += `item_${worksToEdit[i].id}`;
+       
         const deleteButton = document.createElement('button');
         deleteButton.className = ('deleteButton');
         const pngButton = document.createElement('img');
@@ -52,7 +53,7 @@ function displayEditMode(works){
         workElement.appendChild(deleteButton);
         
         const imgPart = document.createElement('img');
-        imgPart.src = works[i].imageUrl;
+        imgPart.src = worksToEdit[i].imageUrl;
         workElement.appendChild(imgPart);
 
         const txtPart = document.createElement('a');
@@ -63,11 +64,14 @@ function displayEditMode(works){
         modalGallery.appendChild(workElement);
     
         deleteButton.addEventListener('click', function(){
-            const workToDeleteId = works[i].id;
+            const workToDeleteId = worksToEdit[i].id;
             deleteWork(workToDeleteId);
-            alert('Element supprimé avec succès')
+            alert('Element supprimé avec succès');
+            const worksToDelete = document.querySelectorAll(`.item_${worksToEdit[i].id}`);
+            for (let work of worksToDelete) {
+                work.remove();
+            };
         });
-
     };
 };
 
@@ -76,5 +80,6 @@ async function deleteWork(workId){
         method: "DELETE",
         headers: {'Content-type':'application/json', 'Authorization' : 'Bearer ' + token },
         });
-    return response.json();
+        console.log(response);
+    return response;
 }
