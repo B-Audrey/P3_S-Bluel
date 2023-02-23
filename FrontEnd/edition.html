@@ -47,20 +47,51 @@
 					<button type="button" class="edit__button" id="openModalButton">
 						<i class="fa-regular fa-pen-to-square"></i> modifier
 					</button>
-<!--          --        MODAL HERE    --        -->
+<!--          --        MODAL HERE    --           -->
 					<aside id="modalBackground" style="display:none;">
 						<div class="modal__container" id="stopPropagation">
-							<button id="closeModalButton"><i class="fa-solid fa-xmark"></i></button>
-							<h3>Galerie photo</h3>
 							
-							<div class="modal__gallery">
+							<div class="navModalButtons">
+								<button id="previousModalButton"><i class="fa-solid fa-arrow-left-long" style="display: none;" id="previousArrow"></i></button>
+								<button id="closeModalButton"><i class="fa-solid fa-xmark"></i></button>
 							</div>
 							
-							<button id="addPicture" type="button">Ajouter une photo</button>
-							<button id="deleteGallery" type="button">Supprimer la galerie</button>
+							<div id="delete__option" style="display: block;">	
+								<h3>Galerie photo</h3>
+								<div class="modal__gallery">
+									<!-- Fill in with .js file	 -->
+								</div>
+								<div class="button__modal">
+									<button id="addPicture" type="button">Ajouter une photo</button>
+									<button id="deleteGallery" type="button">Supprimer la galerie</button>
+								</div>
+							</div>
+							
+							<div id="create__option" style="display: none;">
+								<h3>Ajout photo</h3>
+								<form method="post" action="#" id="addNewWork">
+									<label for="imageUrlToSend" id="imageUrlToSendBlock">
+									<img src="assets/icons/landscape.png" alt="landscape">
+									<input type="image" name="imageUrl" id="imageUrlToSend" src="" alt="+ Ajouter photo">
+									<p>jpg, png : 4mo max</p>
+									</label>
+									<label for="titleToSend">Titre</label>
+									<input type="text" name="title" id="titleToSend">
+									<label for="categorieIdToSend">Categorie</label>
+										<select name="categorieId" id="categorieIdToSend">
+										<!-- Fill in with .js file here -->
+										</select>
+								</form>
+								<div class="button__modal">
+									<input id="addWorkButton" type="submit" value="Valider">
+								</div>
+							</div>
 
 						</div>
 					</aside>
+
+
+					
 
 				</div>
 				<div class="gallery">

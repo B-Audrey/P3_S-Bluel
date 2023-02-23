@@ -1,10 +1,11 @@
 const sendingButton = document.querySelector("#form");
 
 let token = '';
-let dataToSend = {email:'', password:''};
+let logInData = {email:'', password:''};
+let userId = '';
 
 const getLogInData = (event) => {
-    const logInData = {
+    let logInData = {
         email: event.target.querySelector('#email').value,            
         password: event.target.querySelector('#password').value
     }
@@ -24,7 +25,6 @@ const fetchData = async (logInData) => {
 sendingButton.addEventListener('submit', async function(event){
     event.preventDefault();
     const logInData = getLogInData(event);
-    console.log(logInData);
     if (!logInData.email && !logInData.password){
         return alert ('Merci de remplir les champs de saisie;');
     };
@@ -34,9 +34,11 @@ sendingButton.addEventListener('submit', async function(event){
     
     if(response.message || response.error) {
         return alert("Erreur dans l'identifiant ou le mot de passe.");
-    } else if(response.token && response.userId){
+    }else if(response.token && response.userId){
         token = response.token;
+        userId = response.userId;
         window.localStorage.setItem('token', `${token}`);
+        window.localStorage.setItem('userId', `${userId}`);
         document.location.href = 'edition.html';   
     };
 });

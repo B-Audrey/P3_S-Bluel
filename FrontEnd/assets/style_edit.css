@@ -29,6 +29,8 @@ body{
 	margin-left: 1%;
 }
 
+
+/*  ---------------- MODAL   ------------- */
 #modalBackground{
     position: fixed;
     width: 100%;
@@ -63,16 +65,23 @@ body{
     height: 36px;
 }
 
-#closeModalButton{
-    text-align: end;
+.navModalButtons{
+    display: flex;
     width: 100%;
+    justify-content: space-between;
+}
+
+#closeModalButton, #previousModalButton{
     font-size: 1.5em;
 }
 
 h3{
     text-align: center;
+    margin-bottom: 2%;
 }
 
+
+/* -------------- DELETE MODAL ------------------- */
 .modal__gallery{
     box-sizing: border-box;
     display: grid;
@@ -80,9 +89,8 @@ h3{
     gap: 2%;
     width: 420px;
     height: 433px;
-    padding-bottom: 5%;
     border-bottom: 1px solid #B3B3B3;
-    margin: 3%;
+    overflow-y: auto;
 }
 
 .editWork{
@@ -116,15 +124,77 @@ h3{
     height: 9px;
 }
 
-.modal__container #addPicture{
+.button__modal{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+#addPicture{
     background: #1D6154;
     border-radius: 60px;
     width: 237px;
     color: #FFFFFF;
+    margin: 5%;
 }
 
 #deleteGallery{
-    margin-top: 5% ;
     width: 230px;
     color: #D65353;
+}
+
+/* ----------- CREATE MODAL ------------ */
+#create__option{
+    flex-direction: column;
+}
+form{
+    display: flex;
+    flex-direction: column;
+    padding-bottom: 47px;
+    border-bottom: 1px solid #B3B3B3;
+}
+label{
+    font-size: 14px;
+    font-weight: 500;
+    margin-top: 5%;
+    margin-bottom: 5%;
+}
+input, select{
+    width: 420px;
+    height: 51px;
+    background: #FFFFFF;
+    box-shadow: 0px 4px 14px rgba(0, 0, 0, 0.09);
+    border: none;
+}
+#imageUrlToSendBlock{
+    background: #E8F1F7;
+    border-radius: 3px;
+    border: #E8F1F7;
+    width: 420px;
+    height: 169px;
+    display:flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+#imageUrlToSendBlock img{
+    width: 58px;
+    height: 46px;
+}
+#imageUrlToSend{
+    background: #CBD6DC;
+    border-radius: 50px;
+    text-align: center;
+    color: #306685;
+    width: 173px;
+    height: 36px;
+    margin: 5%;
+}
+#addWorkButton{
+    background: #A7A7A7;
+    border-radius: 60px;
+    color: #FFFFFF;
+    width: 237px;
+    height: 36px;
+    margin-top: 32px;
 }

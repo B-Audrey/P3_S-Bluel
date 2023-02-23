@@ -5,14 +5,29 @@ const token = window.localStorage.getItem('token');
 const jsonWorks = await getWorks();
 const works = await useSet(jsonWorks);
 const jsonCategories = await getCategories();
-const categories = useSet(jsonCategories);
+const categories = await useSet(jsonCategories);
 
+// VARIABLES 
 const openModalButton = document.getElementById('openModalButton'); 
 const closeModalButton = document.getElementById('closeModalButton');
+const previousModalButton = document.getElementById('previousArrow');
 const modalBackground = document.getElementById('modalBackground');
 const modalContainer = document.getElementById('stopPropagation');
-display(works);
+const addModal = document.getElementById('addPicture');
+const deleteModal = document.getElementById('delete__option');
+const createModal = document.getElementById('create__option');
+const categorieToSend = document.getElementById('categorieIdToSend');
+const addWorkForm = document.getElementById('addNewWork');
+const addWorkButton = document.getElementById('addWorkButton');
 
+let newImageUrl = '';
+let newTitle = '';
+let newCategoryId = '';
+//---------------------
+
+//MAIN
+display(works);
+//---------------
 
 //LISTENER DISPLAY MODAL
 const displayModal = (string) => {
@@ -31,10 +46,26 @@ modalBackground.addEventListener('click', () => {
 modalContainer.addEventListener('click', (event) => {
     event.stopPropagation();
 });
+addModal.addEventListener('click', () => {
+    deleteModal.style.display = ('none');
+    createModal.style.display = ('flex');
+    previousModalButton.style.display  = ('inline')
+    fillCategoriesForm(categories);
+});
+previousModalButton.addEventListener('click', () => {
+    deleteModal.style.display = ('block');
+    createModal.style.display = ('none');
+    previousModalButton.style.display = ('none');
+});
+addWorkButton.addEventListener('click', (event) => {
+    let newData = getNewData();
+    console.log(newData);
+    getFormData(newData);
+});
 // -----------
 
-
-function displayEditMode(worksToEdit){
+// DISPLAY AND DELETE IN MODAL
+const displayEditMode = (worksToEdit) => {
 
     const modalGallery = document.querySelector('.modal__gallery');
     modalGallery.innerHTML = '';
@@ -83,3 +114,37 @@ async function deleteWork(workId){
         console.log(response);
     return response;
 }
+//---------------------------------
+
+// CREATE IN MODAL
+const fillCategoriesForm = (categories) => {
+    console.log(categories);
+    for (let categorie of categories) {
+        const categorieOption = document.createElement('option');
+        categorieOption.value = categorie.id;
+        categorieOption.innerText = categorie.name;
+        categorieToSend.appendChild(categorieOption);
+    };
+};
+//---------------------
+
+//FORM DATA
+const getFormData = (newData) => {
+    let formData = new FormData(newData);
+    // formData.append('imageUrl', newData.imageUrl);
+    // formData.append('title', newData.title);
+    // formData.append('categoryId', newData.categoryId);
+    console.log(formData)
+};
+
+const getNewData = () => {
+    let newData = [];
+        // newImageUrl = document.querySelector('#imageUrlToSend').value; 
+    newTitle = document.querySelector('#titleToSend').value;
+    newData.push({'title' : newTitle});
+    newCategoryId = document.querySelector('#categorieIdToSend').value;
+    newData.push({'categoryId' : newCategoryId});
+    console.log(newData)
+    return newData
+};
+//-------------------
