@@ -54,7 +54,7 @@ body{
     display: flex;
     flex-direction: column;
     align-items: center;
-    padding: 2%;
+    padding: 1.5%;
 }
 
 .modal__container button{
@@ -166,12 +166,18 @@ input, select{
     box-shadow: 0px 4px 14px rgba(0, 0, 0, 0.09);
     border: none;
 }
+#imgPreviewBlock{
+    height: 169px;
+    box-sizing: border-box;
+    background: #E8F1F7;
+    display: flex;
+    justify-content: center;
+    margin-top: 5%;
+}
 #imageUrlToSendBlock{
     background: #E8F1F7;
     border-radius: 3px;
     border: #E8F1F7;
-    width: 420px;
-    height: 169px;
     display:flex;
     flex-direction: column;
     align-items: center;
@@ -181,14 +187,19 @@ input, select{
     width: 58px;
     height: 46px;
 }
-#imageUrlToSend{
+#imageUrlToSendBlock label{
     background: #CBD6DC;
     border-radius: 50px;
-    text-align: center;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     color: #306685;
     width: 173px;
     height: 36px;
-    margin: 5%;
+}
+#imageUrlToSend{
+    display: none;
 }
 #addWorkButton{
     background: #A7A7A7;
@@ -198,3 +209,6 @@ input, select{
     height: 36px;
     margin-top: 32px;
 }
+#imgPreviewBlock img{
+    max-height: 100%;  
+};

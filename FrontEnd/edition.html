@@ -10,7 +10,6 @@
 		<meta name="description" content="">
 		<link rel="stylesheet" href="./assets/style.css">
 		<link rel="stylesheet" href="./assets/style_edit.css">
-		<script src="https://kit.fontawesome.com/4c168a5617.js" crossorigin="anonymous"></script>
 	</head>
 	<div class="edit">
 		<button type="button"class="edit__button--top"><i class="fa-regular fa-pen-to-square"></i> Mode édition</button>
@@ -47,7 +46,7 @@
 					<button type="button" class="edit__button" id="openModalButton">
 						<i class="fa-regular fa-pen-to-square"></i> modifier
 					</button>
-<!--          --        MODAL HERE    --           -->
+					<!--      --   MODAL HERE    --     -->
 					<aside id="modalBackground" style="display:none;">
 						<div class="modal__container" id="stopPropagation">
 							
@@ -69,28 +68,24 @@
 							
 							<div id="create__option" style="display: none;">
 								<h3>Ajout photo</h3>
-								<form method="post" action="#" id="addNewWork">
-									<label for="imageUrlToSend" id="imageUrlToSendBlock">
-									<img src="assets/icons/landscape.png" alt="landscape">
-									<input type="image" name="imageUrl" id="imageUrlToSend" src="" alt="+ Ajouter photo">
-									<p>jpg, png : 4mo max</p>
-									</label>
+								<form id="addNewWork">
+									<div id="imgPreviewBlock">
+										
+									</div>
 									<label for="titleToSend">Titre</label>
-									<input type="text" name="title" id="titleToSend">
-									<label for="categorieIdToSend">Categorie</label>
-										<select name="categorieId" id="categorieIdToSend">
+									<input type="text" name="title" id="titleToSend" required="required">
+									<label for="categoryIdToSend">Categorie</label>
+									<select name="categoryId" id="categoryIdToSend" required="required">
 										<!-- Fill in with .js file here -->
-										</select>
+									</select>
 								</form>
-								<div class="button__modal">
-									<input id="addWorkButton" type="submit" value="Valider">
-								</div>
+							<div class="button__modal">
+								<button id="addWorkButton" type="button">Valider</button>
+							</div>
 							</div>
 
 						</div>
 					</aside>
-
-
 					
 
 				</div>
@@ -119,5 +114,6 @@
 			</nav>
 		</footer>
 	</body>
+	<script src="https://kit.fontawesome.com/4c168a5617.js" crossorigin="anonymous"></script>
 	<script src="./javaScript/edition.js" type="module"></script>
 </html>

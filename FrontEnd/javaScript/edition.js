@@ -1,13 +1,13 @@
-import { getWorks, getCategories, display, useSet } from "./functions.js";
+import {getWorks, getCategories, display, useSet } from "./functions.js";
 
+// VARIABLES 
 const token = window.localStorage.getItem('token');
 
 const jsonWorks = await getWorks();
-const works = await useSet(jsonWorks);
+let works = await useSet(jsonWorks);
 const jsonCategories = await getCategories();
 const categories = await useSet(jsonCategories);
 
-// VARIABLES 
 const openModalButton = document.getElementById('openModalButton'); 
 const closeModalButton = document.getElementById('closeModalButton');
 const previousModalButton = document.getElementById('previousArrow');
@@ -16,55 +16,15 @@ const modalContainer = document.getElementById('stopPropagation');
 const addModal = document.getElementById('addPicture');
 const deleteModal = document.getElementById('delete__option');
 const createModal = document.getElementById('create__option');
-const categorieToSend = document.getElementById('categorieIdToSend');
+const categoryToSend = document.getElementById('categoryIdToSend');
 const addWorkForm = document.getElementById('addNewWork');
 const addWorkButton = document.getElementById('addWorkButton');
+const imagePreviewBlock = document.getElementById('imgPreviewBlock');
 
-let newImageUrl = '';
-let newTitle = '';
-let newCategoryId = '';
 //---------------------
 
-//MAIN
-display(works);
-//---------------
 
-//LISTENER DISPLAY MODAL
-const displayModal = (string) => {
-    modalBackground.style.display = string;
-} 
-openModalButton.addEventListener('click', () => { 
-    displayModal('flex');
-    displayEditMode(works);
-});
-closeModalButton.addEventListener('click', () => {
-    displayModal('none');
-});
-modalBackground.addEventListener('click', () => {
-    displayModal('none');
-});
-modalContainer.addEventListener('click', (event) => {
-    event.stopPropagation();
-});
-addModal.addEventListener('click', () => {
-    deleteModal.style.display = ('none');
-    createModal.style.display = ('flex');
-    previousModalButton.style.display  = ('inline')
-    fillCategoriesForm(categories);
-});
-previousModalButton.addEventListener('click', () => {
-    deleteModal.style.display = ('block');
-    createModal.style.display = ('none');
-    previousModalButton.style.display = ('none');
-});
-addWorkButton.addEventListener('click', (event) => {
-    let newData = getNewData();
-    console.log(newData);
-    getFormData(newData);
-});
-// -----------
-
-// DISPLAY AND DELETE IN MODAL
+// FUNCTIONS TO DISPLAY AND DELETE IN MODAL
 const displayEditMode = (worksToEdit) => {
 
     const modalGallery = document.querySelector('.modal__gallery');
@@ -96,16 +56,19 @@ const displayEditMode = (worksToEdit) => {
     
         deleteButton.addEventListener('click', function(){
             const workToDeleteId = worksToEdit[i].id;
-            deleteWork(workToDeleteId);
-            alert('Element supprimé avec succès');
-            const worksToDelete = document.querySelectorAll(`.item_${worksToEdit[i].id}`);
-            for (let work of worksToDelete) {
-                work.remove();
+            const response = deleteWork(workToDeleteId);
+            if (response !== 200){
+                const worksToDelete = document.querySelectorAll(`.item_${worksToEdit[i].id}`);
+                for (let work of worksToDelete) {
+                    work.remove();
+                }
+                return alert('Element supprimé avec succès');
+            } else {
+                return alert('Suppression impossible');
             };
         });
     };
 };
-
 async function deleteWork(workId){
     const response = await fetch(`http://localhost:5678/api/works/${workId}`,{
         method: "DELETE",
@@ -113,38 +76,118 @@ async function deleteWork(workId){
         });
         console.log(response);
     return response;
-}
+};
 //---------------------------------
 
-// CREATE IN MODAL
+// FUNCTIONS TO CREATE IN MODAL
 const fillCategoriesForm = (categories) => {
-    console.log(categories);
-    for (let categorie of categories) {
-        const categorieOption = document.createElement('option');
-        categorieOption.value = categorie.id;
-        categorieOption.innerText = categorie.name;
-        categorieToSend.appendChild(categorieOption);
+    categoryToSend.innerHTML=('<option disabled selected></option>');
+    for (let category of categories) {
+        const categoryOption = document.createElement('option');
+        categoryOption.value = category.id;
+        categoryOption.innerText = category.name;
+        categoryToSend.appendChild(categoryOption);
+    };
+};
+const displayModal = (string) => {
+    modalBackground.style.display = string;
+    addWorkForm.reset();
+};
+const fillImageForm = () => {
+    imagePreviewBlock.innerHTML = `<div for="imageUrlToSend" id="imageUrlToSendBlock">
+                                    <img src="assets/icons/landscape.png" alt="landscape">
+                                    <label for="imageUrlToSend">+ Ajouter photo
+                                        <input type="file" name="imageUrl" id="imageUrlToSend" accept=".png, .jpg" required="required">
+                                    </label>
+                                    <p>jpg, png : 4mo max</p>
+                                    </div>`
+    document.getElementById('imageUrlToSend').addEventListener('change', () => {
+        const fileToPreview = imageUrlToSend.files[0];
+        if (fileToPreview.size >= 4194304) {
+            return alert('La taille de l\'image doit être inférieure à 4Mo');
+        } else {
+            const image = document.createElement('img');
+            image.src = URL.createObjectURL(fileToPreview);
+            imagePreviewBlock.appendChild(image);
+            document.getElementById('imageUrlToSendBlock').style.display = 'none';
+        };
+    });
+};
+async function postNewWork(formData){
+    const response = await fetch('http://localhost:5678/api/works',{
+        method:"POST",
+        headers: {'Authorization' : 'Bearer ' + token },
+        body: formData
+    });
+    await response.json();
+    if (response.status === 201) {
+        return alert('Ajout réalisé avec succès');
+    } else {
+        return alert('Ajout non pris en compte');
     };
 };
 //---------------------
 
-//FORM DATA
-const getFormData = (newData) => {
-    let formData = new FormData(newData);
-    // formData.append('imageUrl', newData.imageUrl);
-    // formData.append('title', newData.title);
-    // formData.append('categoryId', newData.categoryId);
-    console.log(formData)
+//MAIN CONTENT
+if (!token){
+    document.body.innerHTML = '';
+    alert('Authentifiez vous pour continuer');
+    location.href = '/connection.html'
+} else {
+    display(works);
 };
+//---------
 
-const getNewData = () => {
-    let newData = [];
-        // newImageUrl = document.querySelector('#imageUrlToSend').value; 
-    newTitle = document.querySelector('#titleToSend').value;
-    newData.push({'title' : newTitle});
-    newCategoryId = document.querySelector('#categorieIdToSend').value;
-    newData.push({'categoryId' : newCategoryId});
-    console.log(newData)
-    return newData
-};
-//-------------------
+
+
+//LISTENERS ON BUTTONS IN MODAL
+openModalButton.addEventListener('click', () => { 
+    displayModal('flex');
+    deleteModal.style.display = ('block');
+    createModal.style.display = ('none');
+    displayEditMode(works);
+    addWorkForm.reset()
+});
+closeModalButton.addEventListener('click', () => {
+    displayModal('none');
+
+});
+modalBackground.addEventListener('click', () => {
+    displayModal('none');
+});
+modalContainer.addEventListener('click', (event) => {
+    event.stopPropagation();
+});
+addModal.addEventListener('click', () => {
+    deleteModal.style.display = ('none');
+    createModal.style.display = ('flex');
+    previousModalButton.style.display  = ('inline')
+    fillImageForm();
+    fillCategoriesForm(categories);
+});
+previousModalButton.addEventListener('click', () => {
+    deleteModal.style.display = ('block');
+    createModal.style.display = ('none');
+    previousModalButton.style.display = ('none');
+});
+addWorkForm.addEventListener('change', () =>{
+    if (!!addWorkForm.elements['title'].value && !!addWorkForm.elements['categoryId'].value && !!imageUrlToSend.files[0]) {
+        addWorkButton.style.backgroundColor = '#1D6154';
+    }
+});
+addWorkButton.addEventListener('click', async (event) => {
+    event.preventDefault();
+    const formData = new FormData();
+    formData.append('image', imageUrlToSend.files[0]);
+    formData.append('title', addWorkForm.elements['title'].value);
+    formData.append('category', addWorkForm.elements['categoryId'].value);
+    // console.log(new Array(...formData.values()));    
+    await postNewWork(formData);
+    displayModal('none');
+    works = await getWorks();
+    works = await useSet(works);
+    console.log(works)
+    document.querySelector('.gallery').innerHTML=('');
+    display(works);
+});
+// -----------
