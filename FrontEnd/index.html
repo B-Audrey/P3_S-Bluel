@@ -9,7 +9,12 @@
 		<link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=Work+Sans&display=swap" rel="stylesheet">
 		<meta name="description" content="">
 		<link rel="stylesheet" href="./assets/style.css">
+		<link rel="stylesheet" href="./assets/style_edit.css">
 	</head>
+	<div class="edit" style="display:none;">
+		<button type="button"class="edit__button--top"><i class="fa-regular fa-pen-to-square"></i> Mode édition</button>
+		<button type="button" class="edit__button--publish">publier les changements</button>
+	</div>
 	<body>
 		<header>
 			<h1>Sophie Bluel <span>Architecte d'intérieur</span></h1>
@@ -17,7 +22,7 @@
 				<ul>
 					<li>projets</li>
 					<li>contact</li>
-					<li><a href="connection.html">login</a></li>
+					<li ><a href="connection.html" id="logLink">login</a></li>
 					<li><img src="./assets/icons/instagram.png" alt="Instagram"></li>
 				</ul>
 			</nav>
@@ -26,8 +31,10 @@
 			<section id="introduction">
 				<figure>
 					<img src="./assets/images/sophie-bluel.png" alt="">
+					<button type="button"class="edit__button" style="display:none;"><i class="fa-regular fa-pen-to-square"></i> modifier</button>
 				</figure>
 				<article>
+					<button type="button"class="edit__button" style="display:none;"><i class="fa-regular fa-pen-to-square"></i> modifier</button>
 					<h2>Designer d'espace</h2>
 					<p>Je raconte votre histoire, je valorise vos idées. Je vous accompagne de la conception à la livraison finale du chantier.</p>
 					<p>Chaque projet sera étudié en commun, de façon à mettre en valeur les volumes, les matières et les couleurs dans le respect de l’esprit des lieux et le choix adapté des matériaux. Le suivi du chantier sera assuré dans le souci du détail, le respect du planning et du budget.</p>
@@ -35,11 +42,58 @@
 				</article>
 			</section>
 			<section id="portfolio">
-				<h2>Mes Projets</h2>
+				<div class="portefolio__title">
+					<h2>Mes Projets</h2>
+					<button type="button" class="edit__button" id="openModalButton" style="display:none;">
+						<i class="fa-regular fa-pen-to-square"></i> modifier
+					</button>
+					
+					<!--      --   MODAL HERE    --     -->
+					<aside id="modalBackground" style="display:none;">
+						<div class="modal__container" id="stopPropagation">
+							
+							<div class="navModalButtons">
+								<button id="previousModalButton"><i class="fa-solid fa-arrow-left-long" style="display: none;" id="previousArrow"></i></button>
+								<button id="closeModalButton"><i class="fa-solid fa-xmark"></i></button>
+							</div>
+							
+							<div id="delete__option" style="display: block;">	
+								<h3>Galerie photo</h3>
+								<div class="modal__gallery">
+									<!-- Fill in with .js file	 -->
+								</div>
+								<div class="button__modal">
+									<button id="addPicture" type="button">Ajouter une photo</button>
+									<button id="deleteGallery" type="button">Supprimer la galerie</button>
+								</div>
+							</div>
+							
+							<div id="create__option" style="display: none;">
+								<h3>Ajout photo</h3>
+								<form id="addNewWork">
+									<div id="imgPreviewBlock">
+										
+									</div>
+									<label for="titleToSend">Titre</label>
+									<input type="text" name="title" id="titleToSend" required="required">
+									<label for="categoryIdToSend">Categorie</label>
+									<select name="categoryId" id="categoryIdToSend" required="required">
+										<!-- Fill in with .js file here -->
+									</select>
+								</form>
+							<div class="button__modal">
+								<button id="addWorkButton" type="button" disabled >Valider</button>
+							</div>
+							</div>
+
+						</div>
+					</aside>
+					
+
+				</div>
 				<div class="filtres">
 				</div>
 				<div class="gallery">
-					
 				</div>
 			</section>
 			<section id="contact">
@@ -64,5 +118,7 @@
 			</nav>
 		</footer>
 	</body>
+	<script src="https://kit.fontawesome.com/4c168a5617.js" crossorigin="anonymous"></script>
 	<script src="./javaScript/gallery.js" type="module"></script>
+	<script src="./javaScript/edition.js" type="module"></script>
 </html>

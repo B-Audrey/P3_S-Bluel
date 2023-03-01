@@ -123,11 +123,11 @@ li:hover, nav a:hover {
 	margin: auto;
 	width: 80%;
 }
-
+#introduction figure button{
+	margin-left: 10%;
+}
 #introduction button{
-	padding: 3%;
-	margin-left: 7%;
-
+	padding: 15px 0px 15px 0px;
 }
 #introduction article {
 	flex: 1
@@ -240,5 +240,6 @@ footer nav ul {
 }
 footer{
 	background-color: #FFFFFF;
-	
+	height: 60px;
+	width: 100%;
 }

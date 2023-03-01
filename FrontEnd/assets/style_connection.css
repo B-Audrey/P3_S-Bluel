@@ -1,0 +1,19 @@
+#logLink{
+    font-weight: bold;
+}
+#formulaire{
+    margin-top: 10%;
+    margin-bottom: 20%;
+}
+footer{
+    height: 60px;
+    width: 100%;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+}
+form a {
+    font-weight: bold;
+    text-decoration: underline;
+    color: #3D3D3D;
+}
