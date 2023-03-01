@@ -1,11 +1,11 @@
-import {getWorks, getCategories, display, useSet } from "./functions.js";
+import {getWorks, getCategories, displayInGallery, deleteDuplicatesWorks } from "./functions.js";
 
 // VARIABLES 
 const token = window.localStorage.getItem('token');
 const jsonWorks = await getWorks();
-let works = await useSet(jsonWorks);
+let works = await deleteDuplicatesWorks(jsonWorks);
 const jsonCategories = await getCategories();
-const categories = await useSet(jsonCategories);
+const categories = await deleteDuplicatesWorks(jsonCategories);
 const previousModalButton = document.getElementById('previousArrow');
 const modalBackground = document.getElementById('modalBackground');
 const deleteModal = document.getElementById('delete__option');
@@ -17,32 +17,32 @@ const imagePreviewBlock = document.getElementById('imgPreviewBlock');
 //---------------------
 
 // FUNCTIONS TO DISPLAY AND DELETE IN MODAL
-const displayEditMode = (worksToEdit) => {
+const displayDeleteWorksModal = (worksToEdit) => {
     const modalGallery = document.querySelector('.modal__gallery');
     modalGallery.innerHTML = '';
-    for(let i=0; i< worksToEdit.length; i++) {
+    for(let currentWork of worksToEdit) {
         const workElement = document.createElement('div');
-        workElement.className = ('editWork ')
-        workElement.className += `item_${worksToEdit[i].id}`;
+        workElement.className = ('editWork ');
+        workElement.className += `item_${currentWork.id}`;
         const deleteButton = document.createElement('button');
         deleteButton.className = ('deleteButton');
         const pngButton = document.createElement('img');
-        pngButton.src = './assets/icons/trashCan.png'
+        pngButton.src = './assets/icons/trashCan.png';
         deleteButton.appendChild(pngButton);
         workElement.appendChild(deleteButton);
         const imgPart = document.createElement('img');
-        imgPart.src = worksToEdit[i].imageUrl;
+        imgPart.src = currentWork.imageUrl;
         workElement.appendChild(imgPart);
         const txtPart = document.createElement('a');
         txtPart.href = '#';
         txtPart.innerText = 'éditer';
         workElement.appendChild(txtPart);
         modalGallery.appendChild(workElement);
+
         deleteButton.addEventListener('click', () => {
-            const workToDeleteId = worksToEdit[i].id;
-            const response = deleteWork(workToDeleteId);
+            const response = deleteWork(currentWork.id);
             if (response !== 200){
-                const worksToDelete = document.querySelectorAll(`.item_${worksToEdit[i].id}`);
+                const worksToDelete = document.querySelectorAll(`.item_${currentWork.id}`);
                 for (let work of worksToDelete) {
                     work.remove();
                 };
@@ -63,6 +63,10 @@ async function deleteWork(workId){
 //---------------------------------
 
 // FUNCTIONS TO CREATE IN MODAL
+const displayModal = (string) => {
+    modalBackground.style.display = string;
+    addWorkForm.reset();
+};
 const fillCategoriesForm = (categories) => {
     categoryToSend.innerHTML=('<option disabled selected></option>');
     for (let category of categories) {
@@ -72,10 +76,6 @@ const fillCategoriesForm = (categories) => {
         categoryToSend.appendChild(categoryOption);
     };
 };
-const displayModal = (string) => {
-    modalBackground.style.display = string;
-    addWorkForm.reset();
-};
 const fillImageForm = () => {
     imagePreviewBlock.innerHTML = `<div for="imageUrlToSend" id="imageUrlToSendBlock">
                                     <img src="assets/icons/landscape.png" alt="landscape">
@@ -83,7 +83,7 @@ const fillImageForm = () => {
                                         <input type="file" name="imageUrl" id="imageUrlToSend" accept=".png, .jpg" required="required">
                                     </label>
                                     <p>jpg, png : 4mo max</p>
-                                    </div>`
+                                    </div>`;
     document.getElementById('imageUrlToSend').addEventListener('change', () => {
         const fileToPreview = imageUrlToSend.files[0];
         if (fileToPreview.size >= 4194304) {
@@ -111,15 +111,13 @@ async function postNewWork(formData){
 };
 //---------------------
 
-
-
 //LISTENERS ON BUTTONS IN MODAL
 document.getElementById('openModalButton').addEventListener('click', () => { 
     displayModal('flex');
     deleteModal.style.display = ('block');
     createModal.style.display = ('none');
     previousModalButton.style.display = ('none');
-    displayEditMode(works);
+    displayDeleteWorksModal(works);
     addWorkForm.reset()
 });
 document.getElementById('closeModalButton').addEventListener('click', () => {
@@ -127,7 +125,6 @@ document.getElementById('closeModalButton').addEventListener('click', () => {
 });
 modalBackground.addEventListener('click', () => {
     displayModal('none');
-
 });
 document.getElementById('stopPropagation').addEventListener('click', (event) => {
     event.stopPropagation();
@@ -160,9 +157,8 @@ addWorkButton.addEventListener('click', async (event) => {
     await postNewWork(formData);
     displayModal('none');
     works = await getWorks();
-    works = await useSet(works);
-    console.log(works)
+    works = await deleteDuplicatesWorks(works);
     document.querySelector('.gallery').innerHTML=('');
-    display(works);
+    displayInGallery(works);
 });
 // -----------

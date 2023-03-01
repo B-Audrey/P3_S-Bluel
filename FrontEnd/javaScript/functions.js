@@ -1,14 +1,12 @@
 export async function getWorks(){
     const response = await fetch('http://localhost:5678/api/works');
     return await response.json(); 
-}
-
+};
 export async function getCategories(){
     const response = await fetch('http://localhost:5678/api/categories');
     return await response.json();  
 };
-
-export function display(works){
+export function displayInGallery(works){
     document.querySelector('.gallery').innerHTML=('');
     for(let i=0; i< works.length; i++) {
         const gallery = document.querySelector('.gallery');
@@ -24,29 +22,28 @@ export function display(works){
         gallery.appendChild(worksElement);
     };
 };
-export function useSet(works){
+export function deleteDuplicatesWorks(works){
     const noDouble = new Set(works);
     let cleanWorks = Array.from(noDouble);
-    return cleanWorks
+    return cleanWorks;
 };
-
-export function formatedClassName(string){
+export function formatClassName(string){
     return string.toLowerCase().replaceAll(' ','_').replace('&','');
 };
-
-export function editDisplay(){
+export function showEditButtons(){
     const editMode = document.getElementsByClassName('edit__button');
     for (let button of editMode){
-        button.style.display = 'inline'
-    }
+        button.style.display = 'inline';
+    };
     const editBlock = document.getElementsByClassName('edit');
-    editBlock[0].style.display = 'flex'
-}
-export function logOut(){
+    editBlock[0].style.display = 'flex';
+
+};
+export function displayLogOutButton(){
     const logLink = document.getElementById('logLink');
     logLink.innerText=('logout');
     logLink.addEventListener('click', () => {
         logLink.href = 'index.html';
         window.localStorage.clear();
-    })
-}
+    });
+};

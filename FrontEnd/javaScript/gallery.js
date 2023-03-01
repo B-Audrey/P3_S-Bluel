@@ -1,50 +1,44 @@
-import {getWorks, getCategories, display, useSet, formatedClassName, editDisplay, logOut} from "./functions.js";
+import {getWorks, getCategories, displayInGallery, deleteDuplicatesWorks, formatClassName, showEditButtons, displayLogOutButton} from "./functions.js";
 
 //VARIABLES
 const jsonWorks = await getWorks();
-const works = useSet(jsonWorks);
+const works = deleteDuplicatesWorks(jsonWorks);
 const jsonCategories = await getCategories();
-const categories = useSet(jsonCategories);
+const categories = deleteDuplicatesWorks(jsonCategories);
 categories.unshift({id: 0, name:'Tous'});
 const token = window.localStorage.getItem('token');
 const filtres = document.querySelector('.filtres');
 //---------------
 
-//FUNCTIONS TO CREATE 
-function createActiveButtons(categories, works){
-    for (let i=0; i<categories.length; i++){
-        let current = categories[i];
+//FUNCTIONS 
+const createActiveFilterButtons = (categories, works) => {
+    for (let currentCategory of categories){
         let button = document.createElement('button');
-        button.className = formatedClassName(current.name);
+        button.className = formatClassName(currentCategory.name);
         button.type = "button";
-        button.innerText = current.name;
+        button.innerText = currentCategory.name;
         filtres.appendChild(button);
         button.addEventListener('click', function(){
-            const filteredResult = works.filter(function(work) {
-                return work.categoryId === current.id;
+            const filteredResult = works.filter( (work) => {
+                return work.categoryId === currentCategory.id;
             });
-            display(filteredResult);
+            displayInGallery(filteredResult);
         });
     };
-    //listen
+
     let tousButton = document.querySelector('.tous');
         tousButton.addEventListener('click', function(){
-            display(works);
+            displayInGallery(works);
         });
 };
+//----------
 
 //MAIN CONTENT
-async function dynamicDisplay(){
-    display(works);
-    createActiveButtons(categories, works);
-};
-
-
+displayInGallery(works);
 if (!token){
-    dynamicDisplay();
+    createActiveFilterButtons(categories, works);
 } else {
-    display(works);
-    editDisplay()
-    logOut()
+    showEditButtons();
+    displayLogOutButton();
 };
 //---------
