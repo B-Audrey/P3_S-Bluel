@@ -11,10 +11,12 @@
 		<link rel="stylesheet" href="./assets/style.css">
 		<link rel="stylesheet" href="./assets/style_edit.css">
 	</head>
+
 	<div class="edit" style="display:none;">
-		<button type="button"class="edit__button--top"><i class="fa-regular fa-pen-to-square"></i> Mode édition</button>
+		<button type="button" class="edit__button--top"><i class="fa-regular fa-pen-to-square"></i> Mode édition</button>
 		<button type="button" class="edit__button--publish">publier les changements</button>
 	</div>
+
 	<body>
 		<header>
 			<h1>Sophie Bluel <span>Architecte d'intérieur</span></h1>
@@ -31,10 +33,10 @@
 			<section id="introduction">
 				<figure>
 					<img src="./assets/images/sophie-bluel.png" alt="">
-					<button type="button"class="edit__button" style="display:none;"><i class="fa-regular fa-pen-to-square"></i> modifier</button>
+					<button type="button" class="edit__button" style="display:none;"><i class="fa-regular fa-pen-to-square"></i> modifier</button>
 				</figure>
 				<article>
-					<button type="button"class="edit__button" style="display:none;"><i class="fa-regular fa-pen-to-square"></i> modifier</button>
+					<button type="button" class="edit__button" style="display:none;"><i class="fa-regular fa-pen-to-square"></i> modifier</button>
 					<h2>Designer d'espace</h2>
 					<p>Je raconte votre histoire, je valorise vos idées. Je vous accompagne de la conception à la livraison finale du chantier.</p>
 					<p>Chaque projet sera étudié en commun, de façon à mettre en valeur les volumes, les matières et les couleurs dans le respect de l’esprit des lieux et le choix adapté des matériaux. Le suivi du chantier sera assuré dans le souci du détail, le respect du planning et du budget.</p>
@@ -48,7 +50,7 @@
 						<i class="fa-regular fa-pen-to-square"></i> modifier
 					</button>
 					
-					<!--      --   MODAL HERE    --     -->
+					<!--      MODAL HERE       -->
 					<aside id="modalBackground" style="display:none;">
 						<div class="modal__container" id="stopPropagation">
 							
@@ -75,7 +77,7 @@
 										
 									</div>
 									<label for="titleToSend">Titre</label>
-									<input type="text" name="title" id="titleToSend" required="required">
+									<input type="text" name="title" id="titleToSend" required="required" maxlength="50">
 									<label for="categoryIdToSend">Categorie</label>
 									<select name="categoryId" id="categoryIdToSend" required="required">
 										<!-- Fill in with .js file here -->

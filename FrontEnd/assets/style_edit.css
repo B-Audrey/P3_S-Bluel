@@ -1,6 +1,9 @@
 body{
     margin-top: 100px;
 }
+button:hover{
+    cursor: pointer;
+}
 .edit{
 	position: fixed;
     width: 100%;
@@ -13,12 +16,13 @@ body{
 	align-items: center;
 }
 .edit__button{
-	border: none;
+	border-style: none;
     background-color: #FFFEF8;
 }
 .edit__button--top{
 	background-color: black;
 	color: white;
+    border-style: none;
 }
 .edit__button--publish{
 	background: #FFFFFF;
@@ -27,6 +31,7 @@ body{
 	padding: 11px 22px 11px 22px;
 	text-align: center;
 	margin-left: 1%;
+    border-style: none;
 }
 
 
@@ -111,10 +116,6 @@ h3{
     box-sizing: border-box;
     width: 17px;
     height: 17px;
-}
-
-.deleteButton:hover{
-    cursor: pointer;
 }
 
 .modal__gallery .deleteButton img{
@@ -213,4 +214,4 @@ label{
 }
 #imgPreviewBlock img{
     max-height: 100%;  
-};
+}

@@ -1,11 +1,9 @@
-import {getWorks, getCategories, displayInGallery, deleteDuplicatesWorks } from "./functions.js";
+import { getWorks, getCategories, displayInGallery, deleteDuplicates } from "./functions.js";
 
 // VARIABLES 
 const token = window.localStorage.getItem('token');
-const jsonWorks = await getWorks();
-let works = await deleteDuplicatesWorks(jsonWorks);
-const jsonCategories = await getCategories();
-const categories = await deleteDuplicatesWorks(jsonCategories);
+let works = await getWorks(); //doit rester modifiable
+const categories = await deleteDuplicates(await getCategories(), 'name');
 const previousModalButton = document.getElementById('previousArrow');
 const modalBackground = document.getElementById('modalBackground');
 const deleteModal = document.getElementById('delete__option');
@@ -16,16 +14,27 @@ const addWorkButton = document.getElementById('addWorkButton');
 const imagePreviewBlock = document.getElementById('imgPreviewBlock');
 //---------------------
 
+const deleteButtonFunc = (currentWorkId) => {
+    return async () => {
+        const response = await deleteWork(currentWorkId);
+        if (response.status < 400) {
+            const worksToDelete = document.querySelectorAll(`.item_${currentWorkId}`);
+            worksToDelete.forEach(work => work.remove());
+            return alert('Element supprimé avec succès');
+        }
+        return alert('Suppression impossible');
+    }
+}
+
 // FUNCTIONS TO DISPLAY AND DELETE IN MODAL
 const displayDeleteWorksModal = (worksToEdit) => {
     const modalGallery = document.querySelector('.modal__gallery');
     modalGallery.innerHTML = '';
-    for(let currentWork of worksToEdit) {
+    for (const currentWork of worksToEdit) {
         const workElement = document.createElement('div');
-        workElement.className = ('editWork ');
-        workElement.className += `item_${currentWork.id}`;
+        workElement.className = `editWork item_${currentWork.id}`;
         const deleteButton = document.createElement('button');
-        deleteButton.className = ('deleteButton');
+        deleteButton.className = 'deleteButton';
         const pngButton = document.createElement('img');
         pngButton.src = './assets/icons/trashCan.png';
         deleteButton.appendChild(pngButton);
@@ -39,43 +48,34 @@ const displayDeleteWorksModal = (worksToEdit) => {
         workElement.appendChild(txtPart);
         modalGallery.appendChild(workElement);
 
-        deleteButton.addEventListener('click', () => {
-            const response = deleteWork(currentWork.id);
-            if (response !== 200){
-                const worksToDelete = document.querySelectorAll(`.item_${currentWork.id}`);
-                for (let work of worksToDelete) {
-                    work.remove();
-                };
-                return alert('Element supprimé avec succès');
-            } else {
-                return alert('Suppression impossible');
-            };
-        });
+        deleteButton.addEventListener('click', deleteButtonFunc(currentWork.id));
     };
-};
-async function deleteWork(workId){
-    const response = await fetch(`http://localhost:5678/api/works/${workId}`,{
+}
+
+const deleteWork = (workId) => {
+    return fetch(`http://localhost:5678/api/works/${workId}`, {
         method: "DELETE",
-        headers: {'Content-type':'application/json', 'Authorization' : 'Bearer ' + token },
-        });
-    return response;
-};
+        headers: { 'Content-type': 'application/json', 'Authorization': 'Bearer ' + token },
+    });    
+}
 //---------------------------------
 
 // FUNCTIONS TO CREATE IN MODAL
-const displayModal = (string) => {
-    modalBackground.style.display = string;
+const displayModal = (display = true) => {
+    modalBackground.style.display = display ? 'flex' : 'none';
     addWorkForm.reset();
-};
+}
+
 const fillCategoriesForm = (categories) => {
-    categoryToSend.innerHTML=('<option disabled selected></option>');
-    for (let category of categories) {
+    categoryToSend.innerHTML = '<option disabled selected></option>';
+    for (const category of categories) {
         const categoryOption = document.createElement('option');
         categoryOption.value = category.id;
         categoryOption.innerText = category.name;
         categoryToSend.appendChild(categoryOption);
     };
-};
+}
+
 const fillImageForm = () => {
     imagePreviewBlock.innerHTML = `<div for="imageUrlToSend" id="imageUrlToSendBlock">
                                     <img src="assets/icons/landscape.png" alt="landscape">
@@ -88,65 +88,64 @@ const fillImageForm = () => {
         const fileToPreview = imageUrlToSend.files[0];
         if (fileToPreview.size >= 4194304) {
             return alert('La taille de l\'image doit être inférieure à 4Mo');
-        } else {
-            const image = document.createElement('img');
-            image.src = URL.createObjectURL(fileToPreview);
-            imagePreviewBlock.appendChild(image);
-            document.getElementById('imageUrlToSendBlock').style.display = 'none';
-        };
+        }
+        const image = document.createElement('img');
+        image.src = URL.createObjectURL(fileToPreview);
+        imagePreviewBlock.appendChild(image);
+        document.getElementById('imageUrlToSendBlock').style.display = 'none';
     });
-};
-async function postNewWork(formData){
-    const response = await fetch('http://localhost:5678/api/works',{
-        method:"POST",
-        headers: {'Authorization' : 'Bearer ' + token },
+}
+
+const postNewWork = async (formData) => {
+    const response = await fetch('http://localhost:5678/api/works', {
+        method: "POST",
+        headers: { 'Authorization': 'Bearer ' + token },
         body: formData
     });
-    await response.json();
-    if (response.status === 201) {
+    
+    if (response.status < 400) {
         return alert('Ajout réalisé avec succès');
-    } else {
-        return alert('Ajout non pris en compte');
-    };
-};
+    }
+    return alert('Ajout non pris en compte');
+}
 //---------------------
 
 //LISTENERS ON BUTTONS IN MODAL
-document.getElementById('openModalButton').addEventListener('click', () => { 
-    displayModal('flex');
-    deleteModal.style.display = ('block');
-    createModal.style.display = ('none');
-    previousModalButton.style.display = ('none');
+document.getElementById('openModalButton').addEventListener('click', () => {
+    displayModal();
+    deleteModal.style.display = 'block';
+    createModal.style.display = 'none';
+    previousModalButton.style.display = 'none';
     displayDeleteWorksModal(works);
-    addWorkForm.reset()
 });
-document.getElementById('closeModalButton').addEventListener('click', () => {
-    displayModal('none');
-});
-modalBackground.addEventListener('click', () => {
-    displayModal('none');
-});
-document.getElementById('stopPropagation').addEventListener('click', (event) => {
-    event.stopPropagation();
-});
+
+document.getElementById('closeModalButton').addEventListener('click', () => displayModal(false));
+
+modalBackground.addEventListener('click', () => displayModal(false));
+
+document.getElementById('stopPropagation').addEventListener('click', (event) => event.stopPropagation());
+
 document.getElementById('addPicture').addEventListener('click', () => {
-    deleteModal.style.display = ('none');
-    createModal.style.display = ('flex');
-    previousModalButton.style.display  = ('inline')
+    deleteModal.style.display = 'none';
+    createModal.style.display = 'flex';
+    previousModalButton.style.display = 'inline'
     fillImageForm();
     fillCategoriesForm(categories);
 });
+
 previousModalButton.addEventListener('click', () => {
-    deleteModal.style.display = ('block');
-    createModal.style.display = ('none');
-    previousModalButton.style.display = ('none');
+    deleteModal.style.display = 'block';
+    createModal.style.display = 'none';
+    previousModalButton.style.display = 'none';
 });
-addWorkForm.addEventListener('change', () =>{
+
+addWorkForm.addEventListener('change', () => {
     if (!!addWorkForm.elements['title'].value && !!addWorkForm.elements['categoryId'].value && !!imageUrlToSend.files[0]) {
         addWorkButton.style.backgroundColor = '#1D6154';
         addWorkButton.disabled = false;
-    };
+    }
 });
+
 addWorkButton.addEventListener('click', async (event) => {
     event.preventDefault();
     const formData = new FormData();
@@ -155,10 +154,10 @@ addWorkButton.addEventListener('click', async (event) => {
     formData.append('category', addWorkForm.elements['categoryId'].value);
     // console.log(new Array(...formData.values()));    
     await postNewWork(formData);
-    displayModal('none');
+    displayModal(false);
     works = await getWorks();
-    works = await deleteDuplicatesWorks(works);
-    document.querySelector('.gallery').innerHTML=('');
+    works = await deleteDuplicates(works);
+    document.querySelector('.gallery').innerHTML = ('');
     displayInGallery(works);
 });
 // -----------

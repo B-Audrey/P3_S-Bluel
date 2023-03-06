@@ -1,27 +1,23 @@
 // VARIABLES
 const sendingButton = document.querySelector("#form");
-let token = '';
-let logInData = {email:'', password:''};
-let userId = '';
 //--------
 
 // FUNCTIONS
 const getLogInData = (event) => {
-    let logInData = {
+    return {
         email: event.target.querySelector('#email').value,            
         password: event.target.querySelector('#password').value
     };
-    return logInData;
-};
+}
+
 const fetchData = async (logInData) => {
-    const dataToSend = JSON.stringify(logInData); 
-    let response = await fetch("http://localhost:5678/api/users/login", {
+    const response = await fetch("http://localhost:5678/api/users/login", {
         method:"POST",
         headers : {"content-type": "application/json"},
-        body: dataToSend
+        body: JSON.stringify(logInData)
     });
-    return await response.json();
-};
+    return response.json();
+}
 //-----
 
 // MAIN LISTENER
@@ -30,16 +26,13 @@ sendingButton.addEventListener('submit', async function(event){
     const logInData = getLogInData(event);
     if (!logInData.email && !logInData.password){
         return alert ('Merci de remplir les champs de saisie;');
-    };
+    }
     const response = await fetchData(logInData);
     if(response.message || response.error) {
         return alert("Erreur dans l'identifiant ou le mot de passe.");
     }else if(response.token && response.userId){
-        token = response.token;
-        userId = response.userId;
-        window.localStorage.setItem('token', `${token}`);
-        window.localStorage.setItem('userId', `${userId}`);
+        window.localStorage.setItem('token', response.token);
         document.location.href = 'index.html';   
-    };
+    }
 });
 //------------
