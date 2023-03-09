@@ -24,13 +24,14 @@ const fetchData = async (logInData) => {
 sendingButton.addEventListener('submit', async function(event){
     event.preventDefault();
     const logInData = getLogInData(event);
-    if (!logInData.email && !logInData.password){
+    if (!logInData.email || !logInData.password){
         return alert ('Merci de remplir les champs de saisie;');
     }
     const response = await fetchData(logInData);
-    if(response.message || response.error) {
+    if (response.message || response.error) {
         return alert("Erreur dans l'identifiant ou le mot de passe.");
-    }else if(response.token && response.userId){
+    }
+    if (response.token && response.userId) {
         window.localStorage.setItem('token', response.token);
         document.location.href = 'index.html';   
     }

@@ -12,6 +12,7 @@ const categoryToSend = document.getElementById('categoryIdToSend');
 const addWorkForm = document.getElementById('addNewWork');
 const addWorkButton = document.getElementById('addWorkButton');
 const imagePreviewBlock = document.getElementById('imgPreviewBlock');
+const maxSizeImg = 4194304;
 //---------------------
 
 const deleteButtonFunc = (currentWorkId) => {
@@ -20,16 +21,29 @@ const deleteButtonFunc = (currentWorkId) => {
         if (response.status < 400) {
             const worksToDelete = document.querySelectorAll(`.item_${currentWorkId}`);
             worksToDelete.forEach(work => work.remove());
-            return alert('Element supprimé avec succès');
+            for(let i = works.length-1 ; i >= 0; i--){
+                if(works[i].id === currentWorkId){
+                    works.splice(i,1)
+                }
+             }  
+            return
         }
         return alert('Suppression impossible');
     }
+}
+
+const deleteWork = (workId) => {
+    return fetch(`http://localhost:5678/api/works/${workId}`, {
+        method: "DELETE",
+        headers: { 'Content-type': 'application/json', 'Authorization': 'Bearer ' + token },
+    });    
 }
 
 // FUNCTIONS TO DISPLAY AND DELETE IN MODAL
 const displayDeleteWorksModal = (worksToEdit) => {
     const modalGallery = document.querySelector('.modal__gallery');
     modalGallery.innerHTML = '';
+
     for (const currentWork of worksToEdit) {
         const workElement = document.createElement('div');
         workElement.className = `editWork item_${currentWork.id}`;
@@ -50,13 +64,6 @@ const displayDeleteWorksModal = (worksToEdit) => {
 
         deleteButton.addEventListener('click', deleteButtonFunc(currentWork.id));
     };
-}
-
-const deleteWork = (workId) => {
-    return fetch(`http://localhost:5678/api/works/${workId}`, {
-        method: "DELETE",
-        headers: { 'Content-type': 'application/json', 'Authorization': 'Bearer ' + token },
-    });    
 }
 //---------------------------------
 
@@ -86,7 +93,7 @@ const fillImageForm = () => {
                                     </div>`;
     document.getElementById('imageUrlToSend').addEventListener('change', () => {
         const fileToPreview = imageUrlToSend.files[0];
-        if (fileToPreview.size >= 4194304) {
+        if (fileToPreview.size >= maxSizeImg) {
             return alert('La taille de l\'image doit être inférieure à 4Mo');
         }
         const image = document.createElement('img');
@@ -104,7 +111,7 @@ const postNewWork = async (formData) => {
     });
     
     if (response.status < 400) {
-        return alert('Ajout réalisé avec succès');
+        return
     }
     return alert('Ajout non pris en compte');
 }
@@ -116,6 +123,8 @@ document.getElementById('openModalButton').addEventListener('click', () => {
     deleteModal.style.display = 'block';
     createModal.style.display = 'none';
     previousModalButton.style.display = 'none';
+    addWorkButton.setAttribute('disabled', true);
+    addWorkButton.style.backgroundColor = '#A7A7A7'
     displayDeleteWorksModal(works);
 });
 
@@ -125,6 +134,12 @@ modalBackground.addEventListener('click', () => displayModal(false));
 
 document.getElementById('stopPropagation').addEventListener('click', (event) => event.stopPropagation());
 
+previousModalButton.addEventListener('click', () => {
+    deleteModal.style.display = 'block';
+    createModal.style.display = 'none';
+    previousModalButton.style.display = 'none';
+});
+
 document.getElementById('addPicture').addEventListener('click', () => {
     deleteModal.style.display = 'none';
     createModal.style.display = 'flex';
@@ -133,16 +148,11 @@ document.getElementById('addPicture').addEventListener('click', () => {
     fillCategoriesForm(categories);
 });
 
-previousModalButton.addEventListener('click', () => {
-    deleteModal.style.display = 'block';
-    createModal.style.display = 'none';
-    previousModalButton.style.display = 'none';
-});
-
 addWorkForm.addEventListener('change', () => {
     if (!!addWorkForm.elements['title'].value && !!addWorkForm.elements['categoryId'].value && !!imageUrlToSend.files[0]) {
         addWorkButton.style.backgroundColor = '#1D6154';
         addWorkButton.disabled = false;
+        return
     }
 });
 
@@ -151,12 +161,10 @@ addWorkButton.addEventListener('click', async (event) => {
     const formData = new FormData();
     formData.append('image', imageUrlToSend.files[0]);
     formData.append('title', addWorkForm.elements['title'].value);
-    formData.append('category', addWorkForm.elements['categoryId'].value);
-    // console.log(new Array(...formData.values()));    
+    formData.append('category', addWorkForm.elements['categoryId'].value);  
     await postNewWork(formData);
     displayModal(false);
     works = await getWorks();
-    works = await deleteDuplicates(works);
     document.querySelector('.gallery').innerHTML = ('');
     displayInGallery(works);
 });

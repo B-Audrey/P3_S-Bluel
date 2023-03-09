@@ -10,6 +10,10 @@ export const getCategories = async () => {
 
 export const displayInGallery = async (works) => {
     document.querySelector('.gallery').innerHTML=('');
+    if(works.length === 0){
+        const text = document.createElement('p');
+        text.innerText = 'Pas de Projet a afficher'
+    }
     for(const work of works) {
         const gallery = document.querySelector('.gallery');
         const worksElement = document.createElement('figure');
@@ -43,7 +47,6 @@ export const showEditButtons = () => {
     };
     const editBlock = document.getElementsByClassName('edit');
     editBlock[0].style.display = 'flex';
-
 }
 
 export const displayLogOutButton = () => {

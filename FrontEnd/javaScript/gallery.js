@@ -2,7 +2,7 @@ import { getWorks, getCategories, displayInGallery, deleteDuplicates, formatClas
 
 //VARIABLES
 const works = await getWorks();
-const categories = deleteDuplicates(await getCategories(), 'name');
+const categories = deleteDuplicates(await getCategories());
 categories.unshift({ id: 0, name: 'Tous' });
 const token = window.localStorage.getItem('token');
 const filtres = document.querySelector('.filtres');
@@ -33,6 +33,7 @@ const createActiveFilterButtons = (categories, works) => {
 
 //MAIN CONTENT
 displayInGallery(works);
+
 if (!token) {
     createActiveFilterButtons(categories, works);
 } else {
