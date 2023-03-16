@@ -20,7 +20,7 @@ const createActiveFilterButtons = (categories, works) => {
             const filteredResult = works.filter((work) => {
                 return work.categoryId === currentCategory.id;
             });
-            displayInGallery(filteredResult);
+        displayInGallery(filteredResult);
         });
     };
 

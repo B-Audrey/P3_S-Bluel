@@ -23,10 +23,10 @@ const deleteButtonFunc = (currentWorkId) => {
             worksToDelete.forEach(work => work.remove());
             for(let i = works.length-1 ; i >= 0; i--){
                 if(works[i].id === currentWorkId){
-                    works.splice(i,1)
+                    works.splice(i,1);
                 }
-             }  
-            return
+            }  
+            return;
         }
         return alert('Suppression impossible');
     }
@@ -63,7 +63,7 @@ const displayDeleteWorksModal = (worksToEdit) => {
         modalGallery.appendChild(workElement);
 
         deleteButton.addEventListener('click', deleteButtonFunc(currentWork.id));
-    };
+    }
 }
 //---------------------------------
 
@@ -111,7 +111,7 @@ const postNewWork = async (formData) => {
     });
     
     if (response.status < 400) {
-        return
+        return;
     }
     return alert('Ajout non pris en compte');
 }
@@ -143,7 +143,7 @@ previousModalButton.addEventListener('click', () => {
 document.getElementById('addPicture').addEventListener('click', () => {
     deleteModal.style.display = 'none';
     createModal.style.display = 'flex';
-    previousModalButton.style.display = 'inline'
+    previousModalButton.style.display = 'inline';
     fillImageForm();
     fillCategoriesForm(categories);
 });
